@@ -12,13 +12,18 @@ class TeamWebController extends Controller
 {
     public function index()
     {
-        $teams = Auth::user()->teams()->with('owner', 'members')->get();
+        if (Auth::user()->isSuperAdmin()) {
+            $teams = Team::with('owner', 'members')->latest()->get();
+        } else {
+            $teams = Auth::user()->teams()->with('owner', 'members')->get();
+        }
         return view('teams.index', compact('teams'));
     }
 
     public function create()
     {
-        return view('teams.create');
+        $users = User::all();
+        return view('teams.create', compact('users'));
     }
 
     public function store(Request $request)
@@ -26,17 +31,20 @@ class TeamWebController extends Controller
         $request->validate([
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
+            'owner_id'    => 'required|exists:users,id',
         ]);
 
         $team = Team::create([
             'name'        => $request->name,
             'description' => $request->description,
-            'owner_id'    => Auth::id(),
+            'owner_id'    => $request->owner_id,
         ]);
 
-        $team->members()->attach(Auth::id(), [
-            'role'      => 'admin',
-            'joined_at' => now(),
+        $team->members()->syncWithoutDetaching([
+            $request->owner_id => [
+                'role'      => 'admin',
+                'joined_at' => now(),
+            ]
         ]);
 
         return redirect('/teams')->with('success', 'Équipe créée avec succès !');
@@ -51,7 +59,8 @@ class TeamWebController extends Controller
 
     public function edit(Team $team)
     {
-        return view('teams.edit', compact('team'));
+        $users = User::all();
+        return view('teams.edit', compact('team', 'users'));
     }
 
     public function update(Request $request, Team $team)
@@ -59,9 +68,21 @@ class TeamWebController extends Controller
         $request->validate([
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
+            'owner_id'    => 'required|exists:users,id',
         ]);
 
-        $team->update($request->only('name', 'description'));
+        $team->update([
+            'name'        => $request->name,
+            'description' => $request->description,
+            'owner_id'    => $request->owner_id,
+        ]);
+
+        $team->members()->syncWithoutDetaching([
+            $request->owner_id => [
+                'role'      => 'admin',
+                'joined_at' => now(),
+            ]
+        ]);
 
         return redirect('/teams')->with('success', 'Équipe mise à jour !');
     }

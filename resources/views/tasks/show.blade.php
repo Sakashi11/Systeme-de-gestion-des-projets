@@ -19,15 +19,33 @@
         <h2 class="text-lg font-semibold text-gray-700 mb-4">Informations</h2>
         <p class="text-gray-500 text-sm mb-4">{{ $task->description ?? 'Aucune description' }}</p>
         <div class="space-y-3 text-sm">
-            <div class="flex justify-between">
+            <div class="flex justify-between items-center">
                 <span class="text-gray-500">Statut</span>
+                @if(Auth::id() === $task->assigned_to)
+                <form method="POST" action="/tasks/{{ $task->id }}/status">
+                    @csrf
+                    @method('PATCH')
+                    <select name="status" onchange="this.form.submit()"
+                        class="text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="todo" {{ $task->status == 'todo' ? 'selected' : '' }}>À faire</option>
+                        <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>En cours</option>
+                        <option value="review" {{ $task->status == 'review' ? 'selected' : '' }}>En revue</option>
+                        <option value="done" {{ $task->status == 'done' ? 'selected' : '' }}>Terminé</option>
+                    </select>
+                </form>
+                @else
                 <span class="px-2 py-1 rounded-full text-xs
                     @if($task->status == 'done') bg-green-100 text-green-700
                     @elseif($task->status == 'in_progress') bg-blue-100 text-blue-700
                     @elseif($task->status == 'review') bg-yellow-100 text-yellow-700
                     @else bg-gray-100 text-gray-700 @endif">
-                    {{ $task->status }}
+                    @if($task->status == 'todo') À faire
+                    @elseif($task->status == 'in_progress') En cours
+                    @elseif($task->status == 'review') En revue
+                    @elseif($task->status == 'done') Terminé
+                    @else {{ $task->status }} @endif
                 </span>
+                @endif
             </div>
             <div class="flex justify-between">
                 <span class="text-gray-500">Priorité</span>

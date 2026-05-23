@@ -42,6 +42,15 @@
                     <p class="text-xs text-gray-500">{{ $member->pivot->role }}</p>
                 </div>
             </div>
+            @if($member->id !== $team->owner_id)
+            <form method="POST" action="/teams/{{ $team->id }}/members/{{ $member->id }}">
+                @csrf
+                @method('DELETE')
+                <button type="submit" onclick="return confirm('Retirer ce membre de l\'équipe ?')" class="text-red-600 hover:text-red-800 text-sm p-1.5 hover:bg-red-50 rounded-lg transition" title="Retirer de l'équipe">
+                    <i class="fas fa-user-minus"></i>
+                </button>
+            </form>
+            @endif
         </div>
         @endforeach
 

@@ -27,6 +27,20 @@
 
             <div class="mb-4">
                 <label class="block text-gray-700 font-medium mb-2">
+                    <i class="fas fa-crown text-yellow-500 mr-1"></i>Propriétaire / Chef de Projet
+                </label>
+                <select name="owner_id" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500" required>
+                    <option value="">Sélectionner un propriétaire</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}" {{ old('owner_id') == $user->id ? 'selected' : '' }}>
+                            {{ $user->name }} ({{ $user->role }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 font-medium mb-2">
                     <i class="fas fa-tag mr-1"></i>Nom de l'équipe
                 </label>
                 <input

@@ -27,8 +27,6 @@ Route::post('/register',[AuthWebController::class, 'register'])->name('register.
 // Routes protégées
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthWebController::class, 'logout'])->name('logout');
-    Route::post('/teams/{team}/members',          [TeamWebController::class, 'addMember'])->name('teams.members.add');
-    Route::delete('/teams/{team}/members/{user}', [TeamWebController::class, 'removeMember'])->name('teams.members.remove');
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -65,13 +63,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/tasks/{task}/edit',    [TaskWebController::class, 'edit'])->name('tasks.edit');
     Route::put('/tasks/{task}',         [TaskWebController::class, 'update'])->name('tasks.update');
     Route::delete('/tasks/{task}',      [TaskWebController::class, 'destroy'])->name('tasks.destroy');
+    Route::patch('/tasks/{task}/status', [TaskWebController::class, 'updateStatus'])->name('tasks.updateStatus');
 
     // Messages
     Route::get('/messages',             [MessageWebController::class, 'index'])->name('messages.index');
     Route::post('/messages',            [MessageWebController::class, 'store'])->name('messages.store');
 });
 // Routes Admin
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'super_admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard',          [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/users',              [AdminController::class, 'users'])->name('admin.users');
     Route::delete('/users/{user}',    [AdminController::class, 'deleteUser'])->name('admin.users.delete');
@@ -85,11 +84,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/teams/{team}/members',          [TeamWebController::class, 'addMember'])->name('admin.teams.members.add');
     Route::delete('/teams/{team}/members/{user}', [TeamWebController::class, 'removeMember'])->name('admin.teams.members.remove');
 });
-// Members
-Route::get('/members',           [MemberController::class, 'index'])->name('admin.members.index');
-Route::get('/members/create',    [MemberController::class, 'create'])->name('admin.members.create');
-Route::post('/members',          [MemberController::class, 'store'])->name('admin.members.store');
-Route::delete('/members/{user}', [MemberController::class, 'destroy'])->name('admin.members.destroy');
+
 
 // Changement de mot de passe
 Route::middleware('auth')->group(function () {

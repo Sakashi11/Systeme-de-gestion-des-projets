@@ -19,8 +19,12 @@ class TaskWebController extends Controller
 
     public function create()
     {
-        $teams    = Auth::user()->teams()->with('projects')->get();
-        $projects = $teams->flatMap->projects;
+        if (Auth::user()->isSuperAdmin()) {
+            $projects = Project::all();
+        } else {
+            $teams    = Auth::user()->teams()->with('projects')->get();
+            $projects = $teams->flatMap->projects;
+        }
         $users    = User::all();
         return view('tasks.create', compact('projects', 'users'));
     }
@@ -58,8 +62,12 @@ class TaskWebController extends Controller
 
     public function edit(Task $task)
     {
-        $teams    = Auth::user()->teams()->with('projects')->get();
-        $projects = $teams->flatMap->projects;
+        if (Auth::user()->isSuperAdmin()) {
+            $projects = Project::all();
+        } else {
+            $teams    = Auth::user()->teams()->with('projects')->get();
+            $projects = $teams->flatMap->projects;
+        }
         $users    = User::all();
         return view('tasks.edit', compact('task', 'projects', 'users'));
     }
@@ -72,14 +80,35 @@ class TaskWebController extends Controller
             'assigned_to' => 'nullable|exists:users,id',
             'priority'    => 'in:low,medium,high,urgent',
             'due_date'    => 'nullable|date',
-            'status'      => 'in:todo,in_progress,review,done',
+            'status'      => 'nullable|in:todo,in_progress,review,done',
         ]);
 
-        $task->update($request->only(
-            'title', 'description', 'assigned_to', 'priority', 'due_date', 'status'
-        ));
+        $data = $request->only(
+            'title', 'description', 'assigned_to', 'priority', 'due_date'
+        );
+
+        if (Auth::id() === $task->assigned_to && $request->has('status')) {
+            $data['status'] = $request->status;
+        }
+
+        $task->update($data);
 
         return redirect('/tasks')->with('success', 'Tâche mise à jour !');
+    }
+
+    public function updateStatus(Request $request, Task $task)
+    {
+        if ($task->assigned_to !== Auth::id()) {
+            abort(403, 'Accès interdit. Seul l’assigné à la tâche peut modifier son statut.');
+        }
+
+        $request->validate([
+            'status' => 'required|in:todo,in_progress,review,done',
+        ]);
+
+        $task->update(['status' => $request->status]);
+
+        return back()->with('success', 'Statut de la tâche mis à jour !');
     }
 
     public function destroy(Task $task)

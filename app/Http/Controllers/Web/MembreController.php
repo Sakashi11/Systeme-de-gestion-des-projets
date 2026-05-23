@@ -37,6 +37,10 @@ class MembreController extends Controller
     // Modifier statut tâche
     public function updateStatut(Request $request, Task $task)
     {
+        if ($task->assigned_to !== Auth::id()) {
+            abort(403, 'Accès interdit. Seul l’assigné à la tâche peut modifier son statut.');
+        }
+
         $request->validate([
             'status' => 'required|in:todo,in_progress,review,done',
         ]);
@@ -49,6 +53,10 @@ class MembreController extends Controller
     // Ajouter commentaire
     public function addComment(Request $request, Task $task)
     {
+        if (!Auth::user()->isSuperAdmin() && !Auth::user()->teams()->where('teams.id', $task->project->team_id)->exists()) {
+            abort(403, 'Accès interdit. Vous ne faites pas partie de l’équipe de ce projet.');
+        }
+
         $request->validate([
             'content' => 'required|string',
         ]);

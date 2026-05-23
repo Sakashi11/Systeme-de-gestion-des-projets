@@ -76,8 +76,34 @@
                     @endif
                 </div>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="text-xs px-2 py-1 rounded-full
+            <div class="flex items-center gap-3">
+                @if(Auth::id() === $task->assigned_to)
+                <form method="POST" action="/tasks/{{ $task->id }}/status">
+                    @csrf
+                    @method('PATCH')
+                    <select name="status" onchange="this.form.submit()"
+                        class="text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="todo" {{ $task->status == 'todo' ? 'selected' : '' }}>À faire</option>
+                        <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>En cours</option>
+                        <option value="review" {{ $task->status == 'review' ? 'selected' : '' }}>En revue</option>
+                        <option value="done" {{ $task->status == 'done' ? 'selected' : '' }}>Terminé</option>
+                    </select>
+                </form>
+                @else
+                <span class="text-xs px-2.5 py-1 rounded-full font-medium
+                    @if($task->status == 'done') bg-green-50 text-green-700 border border-green-100
+                    @elseif($task->status == 'in_progress') bg-blue-50 text-blue-700 border border-blue-100
+                    @elseif($task->status == 'review') bg-yellow-50 text-yellow-700 border border-yellow-100
+                    @else bg-gray-50 text-gray-600 border border-gray-150 @endif">
+                    @if($task->status == 'todo') À faire
+                    @elseif($task->status == 'in_progress') En cours
+                    @elseif($task->status == 'review') En revue
+                    @elseif($task->status == 'done') Terminé
+                    @else {{ $task->status }} @endif
+                </span>
+                @endif
+
+                <span class="text-xs px-2.5 py-1 rounded-full font-medium
                     @if($task->priority == 'urgent') bg-red-100 text-red-700
                     @elseif($task->priority == 'high') bg-orange-100 text-orange-700
                     @elseif($task->priority == 'medium') bg-yellow-100 text-yellow-700

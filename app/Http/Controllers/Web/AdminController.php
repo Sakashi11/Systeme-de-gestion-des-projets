@@ -86,7 +86,7 @@ class AdminController extends Controller
     // Gestion des utilisateurs
     public function users()
     {
-        $users = User::withCount('tasks')->latest()->get();
+        $users = User::with('teams')->withCount('tasks')->latest()->get();
         return view('admin.users', compact('users'));
     }
 

@@ -11,20 +11,14 @@
         <a href="/admin/users" class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm">
             <i class="fas fa-users mr-1"></i>Utilisateurs
         </a>
-        <a href="/admin/teams" class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 text-sm">
+        <a href="/teams" class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 text-sm">
             <i class="fas fa-users-cog mr-1"></i>Équipes
         </a>
-        <a href="/admin/projects" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 text-sm">
+        <a href="/projects" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 text-sm">
             <i class="fas fa-folder mr-1"></i>Projets
         </a>
         <a href="/admin/reports" class="bg-purple-700 text-white px-4 py-2 rounded-lg hover:bg-purple-800 text-sm">
             <i class="fas fa-chart-bar mr-1"></i>Rapports
-        </a>
-        <a href="/admin/members" class="bg-indigo-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-800 text-sm">
-            <i class="fas fa-user-plus mr-1"></i>Membres
-        </a>
-        <a href="/admin/users/create" class="bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 text-sm">
-            <i class="fas fa-user-plus mr-1"></i>Créer Utilisateur
         </a>
     </div>
 </div>
@@ -99,7 +93,7 @@
             </span>
         </div>
         @endforeach
-        <a href="/admin/projects" class="mt-4 inline-block text-blue-700 hover:underline text-sm">
+        <a href="/projects" class="mt-4 inline-block text-blue-700 hover:underline text-sm">
             Voir tous les projets →
         </a>
     </div>

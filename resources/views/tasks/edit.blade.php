@@ -80,12 +80,24 @@
                 <label class="block text-gray-700 font-medium mb-2">
                     <i class="fas fa-info-circle mr-1"></i>Statut
                 </label>
+                @if(Auth::id() === $task->assigned_to)
                 <select name="status" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500">
                     <option value="todo" {{ $task->status == 'todo' ? 'selected' : '' }}>À faire</option>
                     <option value="in_progress" {{ $task->status == 'in_progress' ? 'selected' : '' }}>En cours</option>
                     <option value="review" {{ $task->status == 'review' ? 'selected' : '' }}>En revue</option>
                     <option value="done" {{ $task->status == 'done' ? 'selected' : '' }}>Terminé</option>
                 </select>
+                @else
+                <input type="hidden" name="status" value="{{ $task->status }}">
+                <div class="w-full border border-gray-200 bg-gray-50 rounded-lg px-4 py-2 text-gray-500 cursor-not-allowed">
+                    @if($task->status == 'todo') À faire
+                    @elseif($task->status == 'in_progress') En cours
+                    @elseif($task->status == 'review') En revue
+                    @elseif($task->status == 'done') Terminé
+                    @else {{ $task->status }} @endif
+                    <span class="text-xs text-gray-400 ml-2">(Seul l'assigné peut modifier le statut)</span>
+                </div>
+                @endif
             </div>
 
             <div class="grid grid-cols-2 gap-4 mb-6">

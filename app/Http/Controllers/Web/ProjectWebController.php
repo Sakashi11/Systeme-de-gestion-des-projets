@@ -12,14 +12,18 @@ class ProjectWebController extends Controller
 {
     public function index()
     {
-    $teams    = Auth::user()->teams()->with('projects.team')->get();
-    $projects = $teams->flatMap->projects;
-    return view('projects.index', compact('projects'));
+        if (Auth::user()->isSuperAdmin()) {
+            $projects = Project::with('team')->latest()->get();
+        } else {
+            $teams    = Auth::user()->teams()->with('projects.team')->get();
+            $projects = $teams->flatMap->projects;
+        }
+        return view('projects.index', compact('projects'));
     }
 
     public function create()
     {
-        $teams = Auth::user()->teams;
+        $teams = Auth::user()->isSuperAdmin() ? Team::all() : Auth::user()->teams;
         return view('projects.create', compact('teams'));
     }
 
@@ -49,13 +53,14 @@ class ProjectWebController extends Controller
 
     public function edit(Project $project)
     {
-        $teams = Auth::user()->teams;
+        $teams = Auth::user()->isSuperAdmin() ? Team::all() : Auth::user()->teams;
         return view('projects.edit', compact('project', 'teams'));
     }
 
     public function update(Request $request, Project $project)
     {
         $request->validate([
+            'team_id'     => 'required|exists:teams,id',
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
             'status'      => 'in:planning,active,on_hold,completed',
@@ -64,7 +69,7 @@ class ProjectWebController extends Controller
         ]);
 
         $project->update($request->only(
-            'name', 'description', 'status', 'start_date', 'end_date'
+            'team_id', 'name', 'description', 'status', 'start_date', 'end_date'
         ));
 
         return redirect('/projects')->with('success', 'Projet mis à jour !');

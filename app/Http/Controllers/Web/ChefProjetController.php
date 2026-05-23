@@ -37,20 +37,31 @@ class ChefProjetController extends Controller
     // Liste des membres de son équipe
     public function membres()
     {
-        $teams   = Auth::user()->teams()->with('members')->get();
-        $membres = $teams->flatMap->members->unique('id');
+        $user = Auth::user();
+        if ($user->isSuperAdmin()) {
+            $membres = User::all();
+            $teams   = Team::all();
+        } else {
+            $teams   = $user->teams()->with('members')->get();
+            $membres = $teams->flatMap->members->unique('id');
+        }
         return view('chef.membres', compact('membres', 'teams'));
     }
 
     // Liste des tâches de son équipe
     public function taches()
     {
-        $user     = Auth::user();
-        $teams    = $user->teams()->with('projects')->get();
-        $projects = $teams->flatMap->projects;
-        $tasks    = Task::whereHas('project', function($q) use ($teams) {
-                        $q->whereIn('team_id', $teams->pluck('id'));
-                    })->with('project', 'assignee')->latest()->get();
+        $user = Auth::user();
+        if ($user->isSuperAdmin()) {
+            $projects = Project::all();
+            $tasks    = Task::with('project', 'assignee')->latest()->get();
+        } else {
+            $teams    = $user->teams()->with('projects')->get();
+            $projects = $teams->flatMap->projects;
+            $tasks    = Task::whereHas('project', function($q) use ($teams) {
+                            $q->whereIn('team_id', $teams->pluck('id'));
+                        })->with('project', 'assignee')->latest()->get();
+        }
 
         return view('chef.taches', compact('tasks', 'projects'));
     }
@@ -58,10 +69,15 @@ class ChefProjetController extends Controller
     // Créer une tâche
     public function createTache()
     {
-        $user     = Auth::user();
-        $teams    = $user->teams()->with('projects', 'members')->get();
-        $projects = $teams->flatMap->projects;
-        $membres  = $teams->flatMap->members->unique('id');
+        $user = Auth::user();
+        if ($user->isSuperAdmin()) {
+            $projects = Project::all();
+            $membres  = User::all();
+        } else {
+            $teams    = $user->teams()->with('projects', 'members')->get();
+            $projects = $teams->flatMap->projects;
+            $membres  = $teams->flatMap->members->unique('id');
+        }
 
         return view('chef.create_tache', compact('projects', 'membres'));
     }
@@ -77,6 +93,11 @@ class ChefProjetController extends Controller
             'priority'    => 'in:low,medium,high,urgent',
             'due_date'    => 'nullable|date',
         ]);
+
+        $project = Project::findOrFail($request->project_id);
+        if (!Auth::user()->isSuperAdmin() && !Auth::user()->teams()->where('teams.id', $project->team_id)->exists()) {
+            abort(403, 'Accès interdit. Ce projet ne fait pas partie de vos équipes.');
+        }
 
         Task::create([
             'project_id'  => $request->project_id,
@@ -95,6 +116,10 @@ class ChefProjetController extends Controller
     // Modifier statut tâche
     public function updateStatutTache(Request $request, Task $task)
     {
+        if ($task->assigned_to !== Auth::id()) {
+            abort(403, 'Accès interdit. Seul l’assigné à la tâche peut modifier son statut.');
+        }
+
         $request->validate([
             'status' => 'required|in:todo,in_progress,review,done',
         ]);
@@ -107,6 +132,10 @@ class ChefProjetController extends Controller
     // Supprimer une tâche
     public function deleteTache(Task $task)
     {
+        if (!Auth::user()->isSuperAdmin() && !Auth::user()->teams()->where('teams.id', $task->project->team_id)->exists()) {
+            abort(403, 'Accès interdit. Cette tâche ne fait pas partie de vos équipes.');
+        }
+
         $task->delete();
         return back()->with('success', 'Tâche supprimée !');
     }

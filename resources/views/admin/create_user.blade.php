@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-2xl mx-auto">
     <div class="flex items-center mb-6">
-        <a href="/admin/dashboard" class="text-blue-700 hover:underline mr-4">
+        <a href="/admin/users" class="text-blue-700 hover:underline mr-4">
             <i class="fas fa-arrow-left mr-1"></i>Retour
         </a>
         <h1 class="text-2xl font-bold text-gray-800">
@@ -110,7 +110,7 @@
             </div>
 
             <div class="mb-4">
-                label class="block text-gray-700 font-medium mb-2">
+                <label class="block text-gray-700 font-medium mb-2">
                     <i class="fas fa-briefcase mr-1"></i>Profession
                 </label>
                 <input
@@ -152,7 +152,7 @@
                 <button type="submit" class="bg-blue-700 text-white px-6 py-2 rounded-lg hover:bg-blue-800">
                     <i class="fas fa-user-plus mr-2"></i>Créer l'utilisateur
                 </button>
-                <a href="/admin/dashboard" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300">
+                <a href="/admin/users" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300">
                     Annuler
                 </a>
             </div>

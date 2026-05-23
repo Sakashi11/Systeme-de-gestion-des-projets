@@ -57,6 +57,7 @@
                         </span>
                     </td>
                     <td class="px-6 py-4">
+                        @if(Auth::id() === $task->assigned_to)
                         <form method="POST" action="/chef/taches/{{ $task->id }}">
                             @csrf
                             @method('PATCH')
@@ -68,6 +69,19 @@
                                 <option value="done" {{ $task->status == 'done' ? 'selected' : '' }}>Terminé</option>
                             </select>
                         </form>
+                        @else
+                        <span class="text-xs px-2 py-1 rounded-full
+                            @if($task->status == 'done') bg-green-100 text-green-700
+                            @elseif($task->status == 'in_progress') bg-blue-100 text-blue-700
+                            @elseif($task->status == 'review') bg-yellow-100 text-yellow-700
+                            @else bg-gray-100 text-gray-700 @endif">
+                            @if($task->status == 'todo') À faire
+                            @elseif($task->status == 'in_progress') En cours
+                            @elseif($task->status == 'review') En revue
+                            @elseif($task->status == 'done') Terminé
+                            @else {{ $task->status }} @endif
+                        </span>
+                        @endif
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-500">
                         {{ $task->due_date ?? '-' }}
