@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Team;
 use App\Models\Project;
 use App\Models\Task;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -17,12 +18,20 @@ class AdminController extends Controller
     // Dashboard admin
     public function dashboard()
     {
+        $totalProjects = Project::with('tasks')->get();
+        $averageProgress = $totalProjects->count()
+            ? round($totalProjects->avg('progress'))
+            : 0;
+
         $stats = [
-            'users'    => User::count(),
-            'teams'    => Team::count(),
-            'projects' => Project::count(),
-            'tasks'    => Task::count(),
-            'done'     => Task::where('status', 'done')->count(),
+            'users'           => User::count(),
+            'teams'           => Team::count(),
+            'projects'        => Project::count(),
+            'tasks'           => Task::count(),
+            'done'            => Task::where('status', 'done')->count(),
+            'open_tasks'      => Task::where('status', '!=', 'done')->count(),
+            'avg_progress'    => $averageProgress,
+            'overdue_tasks'   => Task::whereNotNull('due_date')->where('due_date', '<', Carbon::now())->where('status', '!=', 'done')->count(),
         ];
 
         $recentUsers    = User::latest()->take(5)->get();

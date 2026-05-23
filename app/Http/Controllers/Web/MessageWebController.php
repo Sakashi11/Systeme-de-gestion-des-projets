@@ -10,11 +10,21 @@ use Illuminate\Support\Facades\Auth;
 
 class MessageWebController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $teams = Auth::user()->teams()->with('messages.sender')->get();
-        $selectedTeam = $teams->first();
-        $messages = $selectedTeam ? $selectedTeam->messages()->with('sender')->orderBy('created_at')->get() : collect();
+        $teams = Auth::user()->teams()->withCount('messages')->get();
+        $selectedTeamId = $request->query('team');
+        $selectedTeam = $teams->firstWhere('id', $selectedTeamId) ?? $teams->first();
+
+        $teamIds = $teams->pluck('id');
+        $messagesQuery = Message::whereIn('team_id', $teamIds)->with('sender', 'team');
+
+        if ($selectedTeam) {
+            $messagesQuery->where('team_id', $selectedTeam->id);
+        }
+
+        $messages = $messagesQuery->orderBy('created_at', 'desc')->get();
+
         return view('messages.index', compact('teams', 'selectedTeam', 'messages'));
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Message;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -106,6 +107,14 @@ class TeamWebController extends Controller
                 'joined_at' => now(),
             ]
         ]);
+
+        $addedUser = User::find($request->user_id);
+        if ($addedUser) {
+            $team->messages()->create([
+                'sender_id' => Auth::id(),
+                'content'   => "Membre {$addedUser->prenom} {$addedUser->name} ajouté à l'équipe.",
+            ]);
+        }
 
         return back()->with('success', 'Membre ajouté !');
     }

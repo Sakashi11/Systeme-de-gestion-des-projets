@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Message;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
@@ -40,7 +41,7 @@ class TaskWebController extends Controller
             'due_date'    => 'nullable|date',
         ]);
 
-        Task::create([
+        $task = Task::create([
             'project_id'  => $request->project_id,
             'title'       => $request->title,
             'description' => $request->description,
@@ -50,6 +51,17 @@ class TaskWebController extends Controller
             'due_date'    => $request->due_date,
             'status'      => 'todo',
         ]);
+
+        if ($request->assigned_to) {
+            $project = Project::find($request->project_id);
+            if ($project && $project->team_id) {
+                Message::create([
+                    'team_id'   => $project->team_id,
+                    'sender_id' => Auth::id(),
+                    'content'   => "Tâche '{$task->title}' assignée à " . User::find($request->assigned_to)->name . ".",
+                ]);
+            }
+        }
 
         return redirect('/tasks')->with('success', 'Tâche créée avec succès !');
     }
@@ -83,6 +95,7 @@ class TaskWebController extends Controller
             'status'      => 'nullable|in:todo,in_progress,review,done',
         ]);
 
+        $oldAssigned = $task->assigned_to;
         $data = $request->only(
             'title', 'description', 'assigned_to', 'priority', 'due_date'
         );
@@ -92,6 +105,18 @@ class TaskWebController extends Controller
         }
 
         $task->update($data);
+
+        if ($request->assigned_to && $request->assigned_to !== $oldAssigned) {
+            $project = $task->project;
+            if ($project && $project->team_id) {
+                $assignee = User::find($request->assigned_to);
+                Message::create([
+                    'team_id'   => $project->team_id,
+                    'sender_id' => Auth::id(),
+                    'content'   => "Tâche '{$task->title}' assignée à " . ($assignee ? $assignee->name : 'un utilisateur') . ".",
+                ]);
+            }
+        }
 
         return redirect('/tasks')->with('success', 'Tâche mise à jour !');
     }

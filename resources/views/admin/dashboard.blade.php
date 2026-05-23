@@ -24,7 +24,7 @@
 </div>
 
 {{-- Stats --}}
-<div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+<div class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
     <div class="bg-white rounded-lg shadow p-4 text-center">
         <p class="text-3xl font-bold text-blue-600">{{ $stats['users'] }}</p>
         <p class="text-sm text-gray-500 mt-1">Utilisateurs</p>
@@ -44,6 +44,14 @@
     <div class="bg-white rounded-lg shadow p-4 text-center">
         <p class="text-3xl font-bold text-purple-600">{{ $stats['done'] }}</p>
         <p class="text-sm text-gray-500 mt-1">Tâches terminées</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-4 text-center">
+        <p class="text-3xl font-bold text-indigo-600">{{ $stats['avg_progress'] }}%</p>
+        <p class="text-sm text-gray-500 mt-1">Progression moyenne</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-4 text-center">
+        <p class="text-3xl font-bold text-red-600">{{ $stats['overdue_tasks'] }}</p>
+        <p class="text-sm text-gray-500 mt-1">Tâches en retard</p>
     </div>
 </div>
 

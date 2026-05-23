@@ -14,7 +14,7 @@ class MembreController extends Controller
     public function dashboard()
     {
         $user    = Auth::user();
-        $teams   = $user->teams()->with('projects')->get();
+        $teams   = $user->teams()->with('projects', 'members')->get();
         $myTasks = $user->tasks()->with('project')->latest()->take(5)->get();
 
         $stats = [

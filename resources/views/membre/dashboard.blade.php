@@ -30,6 +30,33 @@
     </div>
 </div>
 
+{{-- Mes équipes --}}
+<div class="bg-white rounded-lg shadow p-6 mb-8">
+    <div class="flex items-center justify-between mb-4">
+        <div>
+            <h2 class="text-lg font-semibold text-gray-800">Mes équipes</h2>
+            <p class="text-sm text-gray-500">Équipes dans lesquelles vous êtes membre</p>
+        </div>
+        <a href="/messages" class="text-blue-700 hover:underline text-sm">Voir la messagerie</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        @forelse($teams as $team)
+            <div class="rounded-xl border border-slate-200 p-4 bg-slate-50">
+                <h3 class="font-semibold text-gray-800">{{ $team->name }}</h3>
+                <p class="text-sm text-gray-500 mt-1">{{ $team->description ?? 'Aucune description' }}</p>
+                <div class="mt-4 flex items-center justify-between text-xs text-gray-500">
+                    <span>{{ $team->members->count() }} membre(s)</span>
+                    <span>{{ $team->projects->count() }} projet(s)</span>
+                </div>
+            </div>
+        @empty
+            <div class="col-span-3 text-center py-12 text-gray-500">
+                Vous ne faites partie d'aucune équipe pour le moment.
+            </div>
+        @endforelse
+    </div>
+</div>
+
 {{-- Tâches récentes --}}
 <div class="bg-white rounded-lg shadow p-6">
     <h2 class="text-lg font-semibold text-gray-700 mb-4">

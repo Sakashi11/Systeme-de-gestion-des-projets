@@ -10,7 +10,7 @@ class DashboardController extends Controller
     public function index()
     {
         $user     = Auth::user();
-        $teams    = $user->teams()->with('projects')->get();
+        $teams    = $user->teams()->with('projects', 'members')->get();
         $myTasks  = $user->tasks()->with('project')->latest()->take(5)->get();
         $projects = $teams->flatMap->projects->take(5);
 

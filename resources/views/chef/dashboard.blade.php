@@ -131,6 +131,36 @@
         </a>
     </div>
 
+    {{-- Mes équipes --}}
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <i class="fas fa-users text-blue-600"></i>
+                Mes équipes
+            </h2>
+            <a href="/teams" class="text-blue-600 hover:text-blue-800 text-sm">Voir toutes</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            @forelse($teams as $team)
+                <div class="rounded-2xl border border-gray-100 p-4 bg-gray-50">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-sm font-semibold text-gray-800">{{ $team->name }}</h3>
+                        <span class="text-xs text-slate-500">{{ $team->members->count() }} membres</span>
+                    </div>
+                    <p class="text-xs text-gray-500">{{ $team->description ?? 'Aucune description' }}</p>
+                    <div class="mt-4 flex items-center justify-between text-xs text-gray-500">
+                        <span>{{ $team->projects->count() }} projets</span>
+                        <span>{{ $team->members->count() }} membres</span>
+                    </div>
+                </div>
+            @empty
+                <div class="col-span-3 text-center py-8 text-gray-400">
+                    Vous ne gérez aucune équipe actuellement.
+                </div>
+            @endforelse
+        </div>
+    </div>
+
     {{-- Section principale avec graphique et listes --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {{-- Graphique de progression des tâches (style circulaire) --}}
