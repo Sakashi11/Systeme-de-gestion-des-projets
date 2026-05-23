@@ -11,14 +11,18 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-   protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'avatar',
-    'profession',
-    'must_change_password',
-];
+    protected $fillable = [
+        'name',
+        'prenom',
+        'date_naissance',
+        'code',
+        'email',
+        'password',
+        'avatar',
+        'profession',
+        'role',
+        'must_change_password',
+    ];
 
     protected $hidden = [
         'password',
@@ -28,9 +32,27 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'email_verified_at'    => 'datetime',
+            'password'             => 'hashed',
+            'must_change_password' => 'boolean',
+            'date_naissance'       => 'date',
         ];
+    }
+
+    // Helper roles
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin';
+    }
+
+    public function isChefProjet(): bool
+    {
+        return $this->role === 'chef_projet';
+    }
+
+    public function isMembre(): bool
+    {
+        return $this->role === 'membre';
     }
 
     // Relations

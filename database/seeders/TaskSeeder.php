@@ -2,18 +2,27 @@
 
 namespace Database\Seeders;
 
+use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class TaskSeeder extends Seeder
 {
     public function run(): void
     {
-        // Tâches projet 2
+        $alice  = User::where('email', 'alice@example.com')->first();
+        $bob    = User::where('email', 'bob@example.com')->first();
+        $claire = User::where('email', 'claire@example.com')->first();
+
+        $project1 = Project::where('name', 'Site Web E-commerce')->first();
+        $project2 = Project::where('name', 'Refonte UI')->first();
+
+        // Tâches projet 1
         Task::create([
-            'project_id'  => 2,
-            'assigned_to' => 4,
-            'created_by'  => 3,
+            'project_id'  => $project1->id,
+            'assigned_to' => $bob->id,
+            'created_by'  => $alice->id,
             'title'       => 'Créer la page d\'accueil',
             'description' => 'Design et développement de la page d\'accueil',
             'status'      => 'done',
@@ -22,9 +31,9 @@ class TaskSeeder extends Seeder
         ]);
 
         Task::create([
-            'project_id'  => 2,
-            'assigned_to' => 4,
-            'created_by'  => 3,
+            'project_id'  => $project1->id,
+            'assigned_to' => $bob->id,
+            'created_by'  => $alice->id,
             'title'       => 'Créer la page produits',
             'description' => 'Liste et détails des produits',
             'status'      => 'in_progress',
@@ -33,9 +42,9 @@ class TaskSeeder extends Seeder
         ]);
 
         Task::create([
-            'project_id'  => 2,
-            'assigned_to' => 5,
-            'created_by'  => 3,
+            'project_id'  => $project1->id,
+            'assigned_to' => $claire->id,
+            'created_by'  => $alice->id,
             'title'       => 'Intégrer le paiement',
             'description' => 'Intégration Stripe',
             'status'      => 'todo',
@@ -43,11 +52,11 @@ class TaskSeeder extends Seeder
             'due_date'    => '2026-06-15',
         ]);
 
-        // Tâches projet 3
+        // Tâches projet 2
         Task::create([
-            'project_id'  => 3,
-            'assigned_to' => 5,
-            'created_by'  => 3,
+            'project_id'  => $project2->id,
+            'assigned_to' => $claire->id,
+            'created_by'  => $alice->id,
             'title'       => 'Maquettes Dashboard',
             'description' => 'Créer les maquettes du dashboard',
             'status'      => 'in_progress',

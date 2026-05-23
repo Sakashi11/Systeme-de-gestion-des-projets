@@ -23,6 +23,9 @@
         <a href="/admin/members" class="bg-indigo-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-800 text-sm">
             <i class="fas fa-user-plus mr-1"></i>Membres
         </a>
+        <a href="/admin/users/create" class="bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 text-sm">
+            <i class="fas fa-user-plus mr-1"></i>Créer Utilisateur
+        </a>
     </div>
 </div>
 

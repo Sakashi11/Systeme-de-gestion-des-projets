@@ -14,7 +14,14 @@ class AuthWebController extends Controller
     public function showLogin()
     {
         if (Auth::check()) {
-            return redirect('/dashboard');
+            $user = Auth::user();
+            if ($user->isSuperAdmin()) {
+                return redirect('/admin/dashboard');
+            } elseif ($user->isChefProjet()) {
+                return redirect('/chef/dashboard');
+            } else {
+                return redirect('/membre/dashboard');
+            }
         }
         return view('auth.login');
     }
@@ -24,19 +31,42 @@ class AuthWebController extends Controller
     {
         $request->validate([
             'email'    => 'required|email',
-            'password' => 'required',
+            'password' => 'required|string',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
+        $user = \App\Models\User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return back()->withErrors([
+                'email' => 'Email incorrect.',
+            ])->withInput();
+        }
+
+        // Première connexion → vérifier avec le code en clair
+        if ($user->must_change_password && $request->password === $user->code) {
+            Auth::login($user);
             $request->session()->regenerate();
-            return redirect('/dashboard');
+            return redirect('/password/change')->with('warning', 'Veuillez changer votre mot de passe.');
+        }
+
+        // Connexions suivantes → vérifier avec mot de passe hashé
+        if (\Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
+            Auth::login($user);
+            $request->session()->regenerate();
+
+            if ($user->isSuperAdmin()) {
+                return redirect('/admin/dashboard');
+            } elseif ($user->isChefProjet()) {
+                return redirect('/chef/dashboard');
+            } else {
+                return redirect('/membre/dashboard');
+            }
         }
 
         return back()->withErrors([
             'email' => 'Identifiants incorrects.',
         ])->withInput();
     }
-
     // Afficher page register
     public function showRegister()
     {
@@ -50,10 +80,10 @@ class AuthWebController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name'                  => 'required|string|max:255',
-            'email'                 => 'required|email|unique:users',
-            'password'              => 'required|min:8|confirmed',
-            'profession'            => 'nullable|string|max:255',
+            'name'       => 'required|string|max:255',
+            'email'      => 'required|email|unique:users',
+            'password'   => 'required|min:8|confirmed',
+            'profession' => 'nullable|string|max:255',
         ]);
 
         $user = User::create([
@@ -61,11 +91,12 @@ class AuthWebController extends Controller
             'email'      => $request->email,
             'password'   => Hash::make($request->password),
             'profession' => $request->profession,
+            'role'       => 'membre',
         ]);
 
         Auth::login($user);
 
-        return redirect('/dashboard');
+        return redirect('/membre/dashboard');
     }
 
     // Logout

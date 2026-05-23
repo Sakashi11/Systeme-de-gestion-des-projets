@@ -9,6 +9,8 @@ use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -25,8 +27,60 @@ class AdminController extends Controller
 
         $recentUsers    = User::latest()->take(5)->get();
         $recentProjects = Project::with('team')->latest()->take(5)->get();
+        $teams          = Team::all();
 
         return view('admin.dashboard', compact('stats', 'recentUsers', 'recentProjects'));
+    }
+
+    // Afficher formulaire création utilisateur
+    public function createUser()
+    {
+        $teams = Team::all();
+        return view('admin.create_user', compact('teams'));
+    }
+
+    // Créer un utilisateur
+    public function storeUser(Request $request)
+    {
+        $request->validate([
+            'name'           => 'required|string|max:255',
+            'prenom'         => 'required|string|max:255',
+            'email'          => 'required|email|unique:users',
+            'date_naissance' => 'required|date',
+            'profession'     => 'nullable|string|max:255',
+            'role'           => 'required|in:super_admin,chef_projet,membre',
+            'team_id'        => 'nullable|exists:teams,id',
+        ]);
+
+        // Générer code automatique
+        $code = Str::upper(Str::random(8));
+
+        $user = User::create([
+            'name'                 => $request->name,
+            'prenom'               => $request->prenom,
+            'email'                => $request->email,
+            'date_naissance'       => $request->date_naissance,
+            'profession'           => $request->profession,
+            'role'                 => $request->role,
+            'code'                 => $code,
+            'password'             => Hash::make($code),
+            'must_change_password' => true,
+        ]);
+
+        // Ajouter à une équipe si sélectionnée
+        if ($request->team_id) {
+            $team = Team::find($request->team_id);
+            $team->members()->attach($user->id, [
+                'role'      => $request->role == 'chef_projet' ? 'admin' : 'member',
+                'joined_at' => now(),
+            ]);
+        }
+
+        return redirect('/admin/users/create')
+               ->with('success', 'Utilisateur créé avec succès !')
+               ->with('generated_code', $code)
+               ->with('generated_email', $request->email)
+               ->with('generated_name', $request->prenom . ' ' . $request->name);
     }
 
     // Gestion des utilisateurs

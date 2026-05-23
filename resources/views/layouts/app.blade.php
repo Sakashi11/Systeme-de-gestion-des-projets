@@ -22,38 +22,74 @@
     @auth
     <nav class="bg-blue-700 text-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="/dashboard" class="text-xl font-bold">
+            <a href="
+                @if(auth()->user()->isSuperAdmin()) /admin/dashboard
+                @elseif(auth()->user()->isChefProjet()) /chef/dashboard
+                @else /membre/dashboard
+                @endif
+            " class="text-xl font-bold">
                 <i class="fas fa-project-diagram mr-2"></i>Project Manager
             </a>
-            <div class="flex items-center gap-6">
-                <a href="/dashboard" class="hover:text-blue-200">
+
+        <div class="flex items-center gap-6">
+
+            {{-- Super Admin --}}
+            @if(auth()->user()->isSuperAdmin())
+                <a href="/admin/dashboard" class="hover:text-blue-200">
+                    <i class="fas fa-shield-alt mr-1"></i>Dashboard
+                </a>
+                <a href="/admin/users" class="hover:text-blue-200">
+                    <i class="fas fa-users mr-1"></i>Utilisateurs
+                </a>
+                <a href="/admin/teams" class="hover:text-blue-200">
+                    <i class="fas fa-users-cog mr-1"></i>Équipes
+                </a>
+                <a href="/admin/projects" class="hover:text-blue-200">
+                    <i class="fas fa-folder mr-1"></i>Projets
+                </a>
+                <a href="/admin/reports" class="hover:text-blue-200">
+                    <i class="fas fa-chart-bar mr-1"></i>Rapports
+                </a>
+
+            {{-- Chef de Projet --}}
+            @elseif(auth()->user()->isChefProjet())
+                <a href="/chef/dashboard" class="hover:text-blue-200">
                     <i class="fas fa-home mr-1"></i>Dashboard
                 </a>
-                <a href="/teams" class="hover:text-blue-200">
-                    <i class="fas fa-users mr-1"></i>Équipes
+                <a href="/chef/membres" class="hover:text-blue-200">
+                    <i class="fas fa-users mr-1"></i>Mon Équipe
                 </a>
-                <a href="/projects" class="hover:text-blue-200">
-                    <i class="fas fa-folder mr-1"></i>Projets
+                <a href="/tasks" class="hover:text-blue-200">
+                    <i class="fas fa-tasks mr-1"></i>Tâches
                 </a>
                 <a href="/messages" class="hover:text-blue-200">
                     <i class="fas fa-envelope mr-1"></i>Messages
                 </a>
-                <!-- Admin (uniquement pour les admins) -->
-@if(auth()->user()->teams()->wherePivot('role', 'admin')->exists())
-<a href="/admin/dashboard" class="hover:text-blue-200">
-    <i class="fas fa-shield-alt mr-1"></i>Admin
-</a>
-@endif
-                <form method="POST" action="/logout" class="inline">
-                    @csrf
-                    <button type="submit" class="hover:text-blue-200">
-                        <i class="fas fa-sign-out-alt mr-1"></i>Déconnexion
-                    </button>
-                </form>
-            </div>
+
+            {{-- Membre --}}
+            @else
+                <a href="/membre/dashboard" class="hover:text-blue-200">
+                    <i class="fas fa-home mr-1"></i>Dashboard
+                </a>
+                <a href="/membre/taches" class="hover:text-blue-200">
+                    <i class="fas fa-tasks mr-1"></i>Mes Tâches
+                </a>
+                <a href="/messages" class="hover:text-blue-200">
+                    <i class="fas fa-envelope mr-1"></i>Messages
+                </a>
+            @endif
+
+            {{-- Déconnexion --}}
+            <form method="POST" action="/logout" class="inline">
+                @csrf
+                <button type="submit" class="hover:text-blue-200">
+                    <i class="fas fa-sign-out-alt mr-1"></i>Déconnexion
+                </button>
+            </form>
         </div>
-    </nav>
-    @endauth
+    </div>
+</nav>
+@endauth
 
     <!-- Contenu principal -->
     <main class="max-w-7xl mx-auto px-4 py-8">
