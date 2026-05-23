@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
 use App\Models\Comment;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,6 +26,25 @@ class MembreController extends Controller
         ];
 
         return view('membre.dashboard', compact('user', 'teams', 'myTasks', 'stats'));
+    }
+
+    // Voir les projets de l'utilisateur
+    public function mesProjets()
+    {
+        $user = Auth::user();
+        $projects = $user->teams()->with('projects')->get()->flatMap->projects;
+        return view('membre.projets', compact('projects'));
+    }
+
+    // Voir les détails d'un projet
+    public function voirProjet(Project $project)
+    {
+        // Vérifier que l'utilisateur fait partie d'une équipe ayant accès à ce projet
+        if (!Auth::user()->teams()->where('team_id', $project->team_id)->exists()) {
+            abort(403, 'Accès interdit. Vous ne faites pas partie de l\'équipe de ce projet.');
+        }
+
+        return view('membre.projet-detail', compact('project'));
     }
 
     // Mes tâches

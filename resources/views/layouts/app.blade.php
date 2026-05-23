@@ -79,6 +79,9 @@
                     <a href="/membre/dashboard" class="flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ Request::is('membre/dashboard') ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                         <i class="fas fa-dashboard text-base opacity-80"></i> Mon Dashboard
                     </a>
+                    <a href="/membre/projets" class="flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ Request::is('membre/projets*') ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                        <i class="fas fa-folder text-base opacity-80"></i> Mes Projets
+                    </a>
                     <a href="/membre/taches" class="flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ Request::is('membre/taches') ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                         <i class="fas fa-list-check text-base opacity-80"></i> Mes Tâches
                     </a>
@@ -110,14 +113,14 @@
                 <a href="/admin/users" class="flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ Request::is('admin/users*') ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                     <i class="fas fa-users text-base opacity-80"></i> Utilisateurs
                 </a>
-                <a href="/teams" class="flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ Request::is('teams*') ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
-                    <i class="fas fa-people-group text-base opacity-80"></i> Équipes Système
+                <a href="/admin/teams" class="flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ Request::is('admin/teams*') ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                    <i class="fas fa-users-cog text-base opacity-80"></i> Gestion Équipes
                 </a>
                 <a href="/projects" class="flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ Request::is('projects*') ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                     <i class="fas fa-folder text-base opacity-80"></i> Projets Globaux
                 </a>
                 <a href="/admin/reports" class="flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ Request::is('admin/reports*') ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
-                    <i class="fas fa-chart-simple text-base opacity-80"></i> Rapports de Productivité
+                    <i class="fas fa-chart-simple text-base opacity-80"></i> Rapports
                 </a>
             </div>
             @endif

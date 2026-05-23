@@ -37,7 +37,10 @@
             <h2 class="text-lg font-semibold text-gray-800">Mes équipes</h2>
             <p class="text-sm text-gray-500">Équipes dans lesquelles vous êtes membre</p>
         </div>
-        <a href="/messages" class="text-blue-700 hover:underline text-sm">Voir la messagerie</a>
+        <div class="flex gap-2">
+            <a href="/messages" class="text-blue-700 hover:underline text-sm">Messagerie</a>
+            <a href="/membre/projets" class="bg-blue-700 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-800">Voir les projets</a>
+        </div>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         @forelse($teams as $team)

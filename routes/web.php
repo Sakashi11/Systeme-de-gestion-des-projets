@@ -107,6 +107,8 @@ Route::middleware(['auth', 'chef_projet'])->prefix('chef')->group(function () {
 // Routes Membre
 Route::middleware(['auth'])->prefix('membre')->group(function () {
     Route::get('/dashboard',               [MembreController::class, 'dashboard'])->name('membre.dashboard');
+    Route::get('/projets',                 [MembreController::class, 'mesProjets'])->name('membre.projets');
+    Route::get('/projets/{project}',       [MembreController::class, 'voirProjet'])->name('membre.projet');
     Route::get('/taches',                  [MembreController::class, 'mesTaches'])->name('membre.taches');
     Route::patch('/taches/{task}',         [MembreController::class, 'updateStatut'])->name('membre.taches.statut');
     Route::post('/taches/{task}/comments', [MembreController::class, 'addComment'])->name('membre.taches.comment');
