@@ -15,16 +15,6 @@
                 Tableau de bord – Chef de Projet
             </p>
         </div>
-        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-            <div class="flex items-center gap-3">
-                <a href="/chef/membres" class="text-sm font-medium text-blue-600 hover:text-blue-800">Mes équipes</a>
-                <a href="/chef/projets" class="text-sm font-medium text-blue-600 hover:text-blue-800">Projets</a>
-                <a href="/chef/taches" class="text-sm font-medium text-blue-600 hover:text-blue-800">Tâches</a>
-            </div>
-            <a href="/chef/taches/create" class="inline-flex items-center justify-center rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">
-                <i class="fas fa-plus mr-2"></i>Nouvelle tâche
-            </a>
-        </div>
     </div>
 
     {{-- Cartes statistiques avec icônes et évolution --}}

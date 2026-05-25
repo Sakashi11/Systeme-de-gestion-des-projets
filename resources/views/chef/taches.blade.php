@@ -11,8 +11,12 @@
         <p class="text-sm text-gray-500">Consultez vos tâches et créez-en rapidement depuis ici.</p>
     </div>
     <div class="flex flex-wrap items-center gap-2">
-        <a href="/chef/taches" class="rounded-lg border border-blue-700 bg-blue-700 px-4 py-2 text-sm font-medium text-white">Voir les tâches</a>
-        <a href="/chef/taches/create" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Nouvelle tâche</a>
+        <a href="{{ route('chef.taches') }}" class="rounded-lg px-4 py-2 text-sm font-medium {{ Request::is('chef/taches') ? 'bg-blue-700 text-white border border-blue-700' : 'border border-blue-700 text-blue-700 hover:bg-blue-50' }}">
+            Voir les tâches
+        </a>
+        <a href="{{ route('chef.taches.create') }}" class="rounded-lg px-4 py-2 text-sm font-medium {{ Request::is('chef/taches/create') ? 'bg-blue-700 text-white border border-blue-700' : 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50' }}">
+            Nouvelle tâche
+        </a>
     </div>
 </div>
 
@@ -31,6 +35,7 @@
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tâche</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Projet</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Équipe</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Assigné à</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priorité</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
@@ -47,6 +52,9 @@
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-500">
                         {{ $task->project->name ?? '-' }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-500">
+                        {{ $task->project->team->name ?? '-' }}
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-500">
                         {{ $task->assignee->name ?? 'Non assigné' }}

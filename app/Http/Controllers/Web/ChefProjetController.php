@@ -69,6 +69,24 @@ class ChefProjetController extends Controller
         $user = Auth::user();
         if ($user->isSuperAdmin()) {
             $projects = Project::all();
+            $tasks    = Task::with('project.team', 'assignee')->latest()->get();
+        } else {
+            $teams    = $user->teams()->with('projects')->get();
+            $projects = $teams->flatMap->projects;
+            $tasks    = Task::whereHas('project', function($q) use ($teams) {
+                            $q->whereIn('team_id', $teams->pluck('id'));
+                        })->with('project.team', 'assignee')->latest()->get();
+        }
+
+        return view('chef.taches', compact('tasks', 'projects'));
+    }
+
+    // Créer une tâche
+    public function createTache()
+    {
+        $user = Auth::user();
+        if ($user->isSuperAdmin()) {
+            $projects = Project::all();
             $membres  = User::all();
         } else {
             $teams    = $user->teams()->with('projects', 'members')->get();

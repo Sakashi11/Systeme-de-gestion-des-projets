@@ -99,7 +99,7 @@
                 <a href="/chef/membres" class="flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ Request::is('chef/membres*') ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                     <i class="fas fa-users-viewfinder text-base opacity-80"></i> Mes Membres
                 </a>
-                <a href="/chef/taches" class="flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ Request::is('chef/taches*') ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                <a href="/chef/taches" class="flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-sm font-medium transition {{ Request::is('chef/taches') ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                     <i class="fas fa-list-check text-base opacity-80"></i> Suivi des Tâches
                 </a>
             </div>
