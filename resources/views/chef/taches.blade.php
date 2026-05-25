@@ -3,13 +3,17 @@
 @section('title', 'Gestion des Tâches')
 
 @section('content')
-<div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">
-        <i class="fas fa-tasks mr-2 text-blue-700"></i>Gestion des Tâches
-    </h1>
-    <a href="/chef/taches/create" class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800">
-        <i class="fas fa-plus mr-2"></i>Nouvelle Tâche
-    </a>
+<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-800">
+            <i class="fas fa-tasks mr-2 text-blue-700"></i>Gestion des Tâches
+        </h1>
+        <p class="text-sm text-gray-500">Consultez vos tâches et créez-en rapidement depuis ici.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+        <a href="/chef/taches" class="rounded-lg border border-blue-700 bg-blue-700 px-4 py-2 text-sm font-medium text-white">Voir les tâches</a>
+        <a href="/chef/taches/create" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Nouvelle tâche</a>
+    </div>
 </div>
 
 @if($tasks->isEmpty())

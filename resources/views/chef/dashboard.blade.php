@@ -15,24 +15,15 @@
                 Tableau de bord – Chef de Projet
             </p>
         </div>
-        <div class="flex items-center gap-3">
-            <div class="relative">
-                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
-                <input type="text" placeholder="Rechercher..." class="pl-9 pr-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-200 transition-all text-sm w-48 md:w-64">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+            <div class="flex items-center gap-3">
+                <a href="/chef/membres" class="text-sm font-medium text-blue-600 hover:text-blue-800">Mes équipes</a>
+                <a href="/chef/projets" class="text-sm font-medium text-blue-600 hover:text-blue-800">Projets</a>
+                <a href="/chef/taches" class="text-sm font-medium text-blue-600 hover:text-blue-800">Tâches</a>
             </div>
-            <div class="relative">
-                <button class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition">
-                    <i class="fas fa-bell text-gray-600"></i>
-                </button>
-                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-            </div>
-            <div class="flex items-center gap-2 bg-white rounded-full shadow-sm pl-2 pr-3 py-1 border">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm">
-                    {{ substr($user->prenom, 0, 1) }}{{ substr($user->name, 0, 1) }}
-                </div>
-                <span class="text-sm font-medium text-gray-700 hidden sm:inline">{{ $user->prenom }}</span>
-                <i class="fas fa-chevron-down text-xs text-gray-400"></i>
-            </div>
+            <a href="/chef/taches/create" class="inline-flex items-center justify-center rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">
+                <i class="fas fa-plus mr-2"></i>Nouvelle tâche
+            </a>
         </div>
     </div>
 

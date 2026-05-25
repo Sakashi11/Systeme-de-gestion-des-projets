@@ -97,6 +97,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'chef_projet'])->prefix('chef')->group(function () {
     Route::get('/dashboard',              [ChefProjetController::class, 'dashboard'])->name('chef.dashboard');
     Route::get('/membres',                [ChefProjetController::class, 'membres'])->name('chef.membres');
+    Route::get('/projets',                [ChefProjetController::class, 'projets'])->name('chef.projets');
     Route::get('/taches',                 [ChefProjetController::class, 'taches'])->name('chef.taches');
     Route::get('/taches/create',          [ChefProjetController::class, 'createTache'])->name('chef.taches.create');
     Route::post('/taches',                [ChefProjetController::class, 'storeTache'])->name('chef.taches.store');

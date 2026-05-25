@@ -23,7 +23,7 @@ class TeamWebController extends Controller
 
     public function create()
     {
-        $users = User::all();
+        $users = User::where('role', 'chef_projet')->get();
         return view('teams.create', compact('users'));
     }
 
@@ -34,6 +34,11 @@ class TeamWebController extends Controller
             'description' => 'nullable|string',
             'owner_id'    => 'required|exists:users,id',
         ]);
+
+        $owner = User::where('role', 'chef_projet')->find($request->owner_id);
+        if (!$owner) {
+            return back()->withErrors(['owner_id' => 'Le propriétaire doit être un chef de projet valide.'])->withInput();
+        }
 
         $team = Team::create([
             'name'        => $request->name,
@@ -60,7 +65,7 @@ class TeamWebController extends Controller
 
     public function edit(Team $team)
     {
-        $users = User::all();
+        $users = User::where('role', 'chef_projet')->get();
         return view('teams.edit', compact('team', 'users'));
     }
 
@@ -71,6 +76,11 @@ class TeamWebController extends Controller
             'description' => 'nullable|string',
             'owner_id'    => 'required|exists:users,id',
         ]);
+
+        $owner = User::where('role', 'chef_projet')->find($request->owner_id);
+        if (!$owner) {
+            return back()->withErrors(['owner_id' => 'Le propriétaire doit être un chef de projet valide.'])->withInput();
+        }
 
         $team->update([
             'name'        => $request->name,
